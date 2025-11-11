@@ -2,6 +2,21 @@
 
 An interactive choose-your-own-adventure game template built with React and TypeScript.
 
+## 🚀 Quick Start (For Mac Users)
+
+**The easiest way to start:**
+
+1. Double-click the file: **"Start Adventure Game.command"**
+2. The app will automatically open in your browser
+3. Start creating your adventure game!
+
+**First time only:** You may need to make the file executable. Open Terminal and run:
+```bash
+chmod +x "Start Adventure Game.command"
+```
+
+📖 **See [QUICK_START.md](QUICK_START.md) for detailed instructions and troubleshooting.**
+
 ## Features
 
 ### Main Page
