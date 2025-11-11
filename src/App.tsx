@@ -6,23 +6,15 @@ import { GameData, Character, Scene } from './types';
 
 type Page = 'main' | 'characters';
 
-const STORAGE_KEY = 'adventure-game-data';
+const API_URL = 'http://localhost:3001/api';
 
 const getInitialData = (): GameData => {
-  const saved = localStorage.getItem(STORAGE_KEY);
-  if (saved) {
-    try {
-      return JSON.parse(saved);
-    } catch (e) {
-      console.error('Failed to parse saved data', e);
-    }
-  }
-
   return {
     characters: [],
     scene: {
       narrative: '',
       narrativeAudio: '',
+      sceneImages: [],
       choices: [],
       sceneCharacters: []
     }
@@ -33,14 +25,50 @@ function App() {
   const [currentPage, setCurrentPage] = useState<Page>('main');
   const [gameData, setGameData] = useState<GameData>(getInitialData);
   const [showSaveIndicator, setShowSaveIndicator] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
+  // Load data from server on mount
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(gameData));
+    const loadData = async () => {
+      try {
+        const response = await fetch(`${API_URL}/data`);
+        if (response.ok) {
+          const data = await response.json();
+          setGameData(data);
+        }
+      } catch (error) {
+        console.error('Failed to load data:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    loadData();
+  }, []);
 
-    setShowSaveIndicator(true);
-    const timer = setTimeout(() => setShowSaveIndicator(false), 2000);
-    return () => clearTimeout(timer);
-  }, [gameData]);
+  // Save data to server whenever it changes
+  useEffect(() => {
+    if (isLoading) return; // Don't save during initial load
+
+    const saveData = async () => {
+      try {
+        await fetch(`${API_URL}/data`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(gameData),
+        });
+
+        setShowSaveIndicator(true);
+        const timer = setTimeout(() => setShowSaveIndicator(false), 2000);
+        return () => clearTimeout(timer);
+      } catch (error) {
+        console.error('Failed to save data:', error);
+      }
+    };
+
+    saveData();
+  }, [gameData, isLoading]);
 
   const handleSceneUpdate = (scene: Scene) => {
     setGameData({ ...gameData, scene });
@@ -49,6 +77,16 @@ function App() {
   const handleCharactersUpdate = (characters: Character[]) => {
     setGameData({ ...gameData, characters });
   };
+
+  if (isLoading) {
+    return (
+      <div className="app">
+        <div className="loading-screen">
+          <h2>Loading...</h2>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="app">
@@ -80,7 +118,7 @@ function App() {
 
       {showSaveIndicator && (
         <div className="save-indicator">
-          Saved!
+          Saved to file!
         </div>
       )}
     </div>

@@ -20,6 +20,7 @@ chmod +x "Start Adventure Game.command"
 ## Features
 
 ### Main Page
+- **Scene Images**: Upload multiple images for your scene (displayed above narrative)
 - **Editable Narrative**: Write your story narrative with a large text area
 - **Narration Audio**: Upload audio files for narration
 - **Multiple Choices**: Add, edit, and remove choice options for the player
@@ -31,13 +32,17 @@ chmod +x "Start Adventure Game.command"
 ### Characters Page
 - **Character Management**: Add and remove characters
 - **Profile Pictures**: Upload profile images for each character
+- **Image Positioning Controls**: Adjust how character portraits are displayed:
+  - **Image Fit**: Choose between Cover, Contain, Fill, or Scale Down
+  - **Image Position**: Position images (center, top, bottom, left, right, corners)
 - **Editable Names**: Edit character names directly
 - **Biography Modal**: Click "Biography" button to open a modal where you can write detailed character biographies
 
 ### Data Persistence
-- All data is automatically saved to browser localStorage
-- A "Saved!" indicator appears whenever changes are made
-- Data persists across browser sessions
+- All data is automatically saved to a file on your computer: `data/game-data.json`
+- A "Saved to file!" indicator appears whenever changes are made
+- Your work is saved permanently and survives browser restarts
+- Data includes all text, images, and audio as embedded data
 
 ## Getting Started
 
@@ -50,10 +55,17 @@ npm install
 ### Development
 
 ```bash
-npm run dev
+npm start
 ```
 
-Opens the development server at `http://localhost:5173`
+Starts both the backend server (port 3001) and frontend dev server (port 5173).
+The app will be available at `http://localhost:5173`
+
+To run servers separately:
+```bash
+npm run server  # Backend only
+npm run dev     # Frontend only
+```
 
 ### Build
 
@@ -89,29 +101,29 @@ npm run preview
 
 - **React 18** - UI framework
 - **TypeScript** - Type safety
+- **Node.js + Express** - Backend server for file-based storage
 - **Vite** - Build tool and dev server
 - **CSS3** - Styling
 
 ## Data Structure
 
-All data is stored in localStorage under the key `adventure-game-data` with the following structure:
+All data is saved to `data/game-data.json` on your computer with the following structure:
 
 ```typescript
 {
-  characters: Character[],  // List of all characters
+  characters: Character[],  // List of all characters with profile pics
   scene: {
-    narrative: string,       // Main narrative text
-    narrativeAudio: string,  // Audio file as data URL
-    choices: Choice[],       // Available choices
-    sceneCharacters: []      // Characters in current scene
+    narrative: string,         // Main narrative text
+    narrativeAudio: string,    // Audio file as data URL
+    sceneImages: SceneImage[], // Images for the scene
+    choices: Choice[],         // Available choices
+    sceneCharacters: []        // Characters with images/audio in scene
   }
 }
 ```
 
-## Browser Compatibility
+## System Requirements
 
-Works in all modern browsers that support:
-- ES2020
-- localStorage
-- FileReader API
-- Audio/Image upload
+- **Node.js** (v14 or higher) - Download from https://nodejs.org/
+- Modern web browser (Chrome, Firefox, Safari, Edge)
+- Works on Mac, Windows, and Linux

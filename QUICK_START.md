@@ -17,17 +17,26 @@
 1. **Starting the App:**
    - Double-click the file: **"Start Adventure Game.command"**
    - A Terminal window will open and the app will start
+   - Both the backend server and frontend will start automatically
    - Your browser will automatically open to the app
    - ⚠️ **Keep the Terminal window open while using the app!**
 
 2. **Using the App:**
    - The app will open at: `http://localhost:5173`
    - Start creating your adventure game!
-   - All your work saves automatically
+   - All your work saves automatically to: `data/game-data.json`
+   - Your data is saved to your computer, not your browser!
 
 3. **Stopping the App:**
    - Close the Terminal window that opened, OR
    - Click in the Terminal window and press `Ctrl+C`
+
+4. **Where is my data saved?**
+   - Your game data is saved in the `data` folder inside the project
+   - The file is called `game-data.json`
+   - This file contains all your text, images, and audio
+   - You can backup this file to save your work
+   - The file persists even if you close your browser or restart your computer
 
 ### Troubleshooting:
 
@@ -60,7 +69,7 @@ If the .command file doesn't work, you can start manually:
 3. Run:
    ```bash
    npm install    # Only needed the first time
-   npm run dev    # Start the app
+   npm start      # Start the app (runs both backend and frontend)
    ```
 
 ---
@@ -68,6 +77,7 @@ If the .command file doesn't work, you can start manually:
 ## What You Can Do in the App:
 
 ### Main Page:
+- Upload scene images (displayed above the narrative)
 - Write your story narrative
 - Upload narration audio
 - Add/edit/remove player choices
@@ -76,10 +86,11 @@ If the .command file doesn't work, you can start manually:
 ### Characters Page:
 - Add/remove characters
 - Upload profile pictures
+- Adjust how profile pictures are displayed (fit and position)
 - Edit character names
 - Write character biographies
 
-Everything saves automatically to your browser!
+Everything saves automatically to a file on your computer!
 
 ---
 

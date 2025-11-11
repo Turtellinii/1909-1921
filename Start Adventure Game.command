@@ -19,8 +19,11 @@ fi
 
 echo "🚀 Starting the application..."
 echo ""
+echo "This will start both the backend server and frontend."
 echo "The app will open in your browser automatically."
 echo "If it doesn't open, go to: http://localhost:5173"
+echo ""
+echo "💾 Your data will be saved to: data/game-data.json"
 echo ""
 echo "⚠️  IMPORTANT: Keep this window open while using the app!"
 echo "To stop the app, close this window or press Ctrl+C"
@@ -28,8 +31,8 @@ echo ""
 echo "==================================="
 echo ""
 
-# Start the dev server and open browser
-npm run dev -- --open
+# Start both the backend server and frontend dev server
+npm start -- --open
 
 echo ""
 echo "Application closed. You can close this window now."

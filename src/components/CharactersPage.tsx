@@ -16,7 +16,9 @@ export const CharactersPage: React.FC<CharactersPageProps> = ({ characters, onCh
       id: generateId(),
       name: '',
       profilePicture: '',
-      biography: ''
+      biography: '',
+      imageObjectFit: 'cover',
+      imageObjectPosition: 'center'
     };
     onCharactersUpdate([...characters, newCharacter]);
   };
@@ -37,6 +39,20 @@ export const CharactersPage: React.FC<CharactersPageProps> = ({ characters, onCh
     const dataUrl = await readFileAsDataURL(file);
     const updatedCharacters = characters.map(char =>
       char.id === characterId ? { ...char, profilePicture: dataUrl } : char
+    );
+    onCharactersUpdate(updatedCharacters);
+  };
+
+  const handleImageFitChange = (characterId: string, objectFit: 'cover' | 'contain' | 'fill' | 'scale-down') => {
+    const updatedCharacters = characters.map(char =>
+      char.id === characterId ? { ...char, imageObjectFit: objectFit } : char
+    );
+    onCharactersUpdate(updatedCharacters);
+  };
+
+  const handleImagePositionChange = (characterId: string, objectPosition: string) => {
+    const updatedCharacters = characters.map(char =>
+      char.id === characterId ? { ...char, imageObjectPosition: objectPosition } : char
     );
     onCharactersUpdate(updatedCharacters);
   };
@@ -68,7 +84,14 @@ export const CharactersPage: React.FC<CharactersPageProps> = ({ characters, onCh
             <div key={character.id} className="character-card">
               <div className="character-profile-pic">
                 {character.profilePicture ? (
-                  <img src={character.profilePicture} alt={character.name || 'Character'} />
+                  <img
+                    src={character.profilePicture}
+                    alt={character.name || 'Character'}
+                    style={{
+                      objectFit: character.imageObjectFit || 'cover',
+                      objectPosition: character.imageObjectPosition || 'center'
+                    }}
+                  />
                 ) : (
                   <span>👤</span>
                 )}
@@ -94,6 +117,47 @@ export const CharactersPage: React.FC<CharactersPageProps> = ({ characters, onCh
                   }}
                 />
               </div>
+
+              {character.profilePicture && (
+                <div className="image-positioning-controls">
+                  <div style={{ marginBottom: '0.5rem' }}>
+                    <label style={{ display: 'block', fontSize: '0.9rem', marginBottom: '0.25rem', color: '#555' }}>
+                      Image Fit:
+                    </label>
+                    <select
+                      className="input"
+                      value={character.imageObjectFit || 'cover'}
+                      onChange={(e) => handleImageFitChange(character.id, e.target.value as any)}
+                    >
+                      <option value="cover">Cover (fill frame)</option>
+                      <option value="contain">Contain (fit inside)</option>
+                      <option value="fill">Fill (stretch)</option>
+                      <option value="scale-down">Scale Down (shrink if needed)</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.9rem', marginBottom: '0.25rem', color: '#555' }}>
+                      Image Position:
+                    </label>
+                    <select
+                      className="input"
+                      value={character.imageObjectPosition || 'center'}
+                      onChange={(e) => handleImagePositionChange(character.id, e.target.value)}
+                    >
+                      <option value="center">Center</option>
+                      <option value="top">Top</option>
+                      <option value="bottom">Bottom</option>
+                      <option value="left">Left</option>
+                      <option value="right">Right</option>
+                      <option value="top left">Top Left</option>
+                      <option value="top right">Top Right</option>
+                      <option value="bottom left">Bottom Left</option>
+                      <option value="bottom right">Bottom Right</option>
+                    </select>
+                  </div>
+                </div>
+              )}
 
               <div className="character-actions">
                 <button

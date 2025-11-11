@@ -1,5 +1,5 @@
 import React from 'react';
-import { Scene, Choice, SceneCharacter } from '../types';
+import { Scene, Choice, SceneCharacter, SceneImage } from '../types';
 import { generateId, readFileAsDataURL } from '../utils';
 
 interface MainPageProps {
@@ -18,6 +18,23 @@ export const MainPage: React.FC<MainPageProps> = ({ scene, onSceneUpdate }) => {
       const dataUrl = await readFileAsDataURL(file);
       onSceneUpdate({ ...scene, narrativeAudio: dataUrl });
     }
+  };
+
+  const handleAddSceneImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const dataUrl = await readFileAsDataURL(file);
+      const newSceneImage: SceneImage = {
+        id: generateId(),
+        imageUrl: dataUrl
+      };
+      onSceneUpdate({ ...scene, sceneImages: [...scene.sceneImages, newSceneImage] });
+    }
+  };
+
+  const handleRemoveSceneImage = (imageId: string) => {
+    const updatedImages = scene.sceneImages.filter(img => img.id !== imageId);
+    onSceneUpdate({ ...scene, sceneImages: updatedImages });
   };
 
   const handleChoiceChange = (choiceId: string, text: string) => {
@@ -74,6 +91,41 @@ export const MainPage: React.FC<MainPageProps> = ({ scene, onSceneUpdate }) => {
   return (
     <div className="main-page">
       <div className="main-section">
+        <div className="card scene-images-section">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+            <h2>Scene Images</h2>
+            <label className="btn btn-primary" style={{ cursor: 'pointer', margin: 0 }}>
+              Add Image
+              <input
+                type="file"
+                accept="image/*"
+                style={{ display: 'none' }}
+                onChange={handleAddSceneImage}
+              />
+            </label>
+          </div>
+          <div className="scene-images-grid">
+            {scene.sceneImages.length === 0 ? (
+              <div className="empty-state">
+                <p>No scene images yet. Click "Add Image" to upload one.</p>
+              </div>
+            ) : (
+              scene.sceneImages.map((sceneImage) => (
+                <div key={sceneImage.id} className="scene-image-item">
+                  <img src={sceneImage.imageUrl} alt="Scene" />
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => handleRemoveSceneImage(sceneImage.id)}
+                    style={{ marginTop: '0.5rem', width: '100%' }}
+                  >
+                    Remove
+                  </button>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+
         <div className="card narrative-section">
           <h2>Narrative</h2>
           <textarea
