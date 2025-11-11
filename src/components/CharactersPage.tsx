@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Character } from '../types';
 import { generateId, readFileAsDataURL } from '../utils';
 import { BiographyModal } from './BiographyModal';
+import { ImagePositionDragger } from './ImagePositionDragger';
 
 interface CharactersPageProps {
   characters: Character[];
@@ -18,7 +19,7 @@ export const CharactersPage: React.FC<CharactersPageProps> = ({ characters, onCh
       profilePicture: '',
       biography: '',
       imageObjectFit: 'cover',
-      imageObjectPosition: 'center'
+      imageObjectPosition: '50% 50%'
     };
     onCharactersUpdate([...characters, newCharacter]);
   };
@@ -119,44 +120,13 @@ export const CharactersPage: React.FC<CharactersPageProps> = ({ characters, onCh
               </div>
 
               {character.profilePicture && (
-                <div className="image-positioning-controls">
-                  <div style={{ marginBottom: '0.5rem' }}>
-                    <label style={{ display: 'block', fontSize: '0.9rem', marginBottom: '0.25rem', color: '#555' }}>
-                      Image Fit:
-                    </label>
-                    <select
-                      className="input"
-                      value={character.imageObjectFit || 'cover'}
-                      onChange={(e) => handleImageFitChange(character.id, e.target.value as any)}
-                    >
-                      <option value="cover">Cover (fill frame)</option>
-                      <option value="contain">Contain (fit inside)</option>
-                      <option value="fill">Fill (stretch)</option>
-                      <option value="scale-down">Scale Down (shrink if needed)</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label style={{ display: 'block', fontSize: '0.9rem', marginBottom: '0.25rem', color: '#555' }}>
-                      Image Position:
-                    </label>
-                    <select
-                      className="input"
-                      value={character.imageObjectPosition || 'center'}
-                      onChange={(e) => handleImagePositionChange(character.id, e.target.value)}
-                    >
-                      <option value="center">Center</option>
-                      <option value="top">Top</option>
-                      <option value="bottom">Bottom</option>
-                      <option value="left">Left</option>
-                      <option value="right">Right</option>
-                      <option value="top left">Top Left</option>
-                      <option value="top right">Top Right</option>
-                      <option value="bottom left">Bottom Left</option>
-                      <option value="bottom right">Bottom Right</option>
-                    </select>
-                  </div>
-                </div>
+                <ImagePositionDragger
+                  imageUrl={character.profilePicture}
+                  currentFit={character.imageObjectFit || 'cover'}
+                  currentPosition={character.imageObjectPosition || '50% 50%'}
+                  onFitChange={(fit) => handleImageFitChange(character.id, fit)}
+                  onPositionChange={(position) => handleImagePositionChange(character.id, position)}
+                />
               )}
 
               <div className="character-actions">
